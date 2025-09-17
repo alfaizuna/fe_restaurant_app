@@ -35,12 +35,11 @@ export const Login = (): JSX.Element => {
   };
 
   return (
-    <div className="w-full max-w-[1440px] h-[1024px] mx-auto">
-      <div className="relative h-[1024px] bg-white flex">
-        <div className="w-1/2 h-full bg-[url(/figmaAssets/image-8.png)] bg-cover bg-center" />
+    <div className="w-full min-h-screen flex flex-col md:flex-row">
+      <div className="w-full md:w-1/2 min-h-screen bg-[url(/figmaAssets/image-8.png)] bg-cover bg-center hidden md:block" />
 
-        <div className="w-1/2 flex items-center justify-center px-8">
-          <div className="flex flex-col w-full max-w-[374px] items-start gap-5">
+        <div className="w-full md:w-1/2 flex items-center justify-center px-4 md:px-8 min-h-screen">
+          <div className="flex flex-col w-full max-w-[374px] items-start gap-5 py-8">
             <div className="inline-flex items-center gap-[15px] relative flex-[0_0_auto]">
               <img
                 className="relative w-[42px] h-[42px]"
@@ -137,7 +136,6 @@ export const Login = (): JSX.Element => {
             </Tabs>
           </div>
         </div>
-      </div>
     </div>
   );
 };
