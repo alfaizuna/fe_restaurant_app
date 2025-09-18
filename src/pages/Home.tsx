@@ -220,12 +220,10 @@ export const Home = (): JSX.Element => {
         }`}>
           <div className={`${
             isMobile 
-              ? 'flex gap-5 overflow-x-auto no-scrollbar pb-2' 
+              ? 'grid grid-cols-3 gap-4' 
               : 'grid grid-cols-3 md:grid-cols-6 gap-6'
           }`}>
-            <div className={`flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity ${
-              isMobile ? 'flex-shrink-0 w-[106px]' : ''
-            }`} data-testid="category-all-restaurant">
+            <div className="flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity" data-testid="category-all-restaurant">
               <div className={`${
                 isMobile 
                   ? 'w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-1 shadow-md' 
@@ -240,9 +238,7 @@ export const Home = (): JSX.Element => {
               <span className="text-sm font-bold text-[#0a0d12] text-center">All Restaurant</span>
             </div>
             
-            <div className={`flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity ${
-              isMobile ? 'flex-shrink-0 w-[106px]' : ''
-            }`} data-testid="category-nearby">
+            <div className="flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity" data-testid="category-nearby">
               <div className={`${
                 isMobile 
                   ? 'w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-1 shadow-md' 
@@ -257,9 +253,7 @@ export const Home = (): JSX.Element => {
               <span className="text-sm font-bold text-[#0a0d12] text-center">Nearby</span>
             </div>
             
-            <div className={`flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity ${
-              isMobile ? 'flex-shrink-0 w-[106px]' : ''
-            }`} data-testid="category-discount">
+            <div className="flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity" data-testid="category-discount">
               <div className={`${
                 isMobile 
                   ? 'w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-1 shadow-md' 
@@ -274,9 +268,7 @@ export const Home = (): JSX.Element => {
               <span className="text-sm font-bold text-[#0a0d12] text-center">Discount</span>
             </div>
             
-            <div className={`flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity ${
-              isMobile ? 'flex-shrink-0 w-[106px]' : ''
-            }`} data-testid="category-best-seller">
+            <div className="flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity" data-testid="category-best-seller">
               <div className={`${
                 isMobile 
                   ? 'w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-1 shadow-md' 
@@ -291,9 +283,7 @@ export const Home = (): JSX.Element => {
               <span className="text-sm font-bold text-[#0a0d12] text-center">Best Seller</span>
             </div>
             
-            <div className={`flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity ${
-              isMobile ? 'flex-shrink-0 w-[106px]' : ''
-            }`} data-testid="category-delivery">
+            <div className="flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity" data-testid="category-delivery">
               <div className={`${
                 isMobile 
                   ? 'w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-1 shadow-md' 
@@ -308,9 +298,7 @@ export const Home = (): JSX.Element => {
               <span className="text-sm font-bold text-[#0a0d12] text-center">Delivery</span>
             </div>
             
-            <div className={`flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity ${
-              isMobile ? 'flex-shrink-0 w-[106px]' : ''
-            }`} data-testid="category-lunch">
+            <div className="flex flex-col items-center text-center cursor-pointer hover:opacity-80 transition-opacity" data-testid="category-lunch">
               <div className={`${
                 isMobile 
                   ? 'w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-1 shadow-md' 
