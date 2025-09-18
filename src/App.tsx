@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 
 import { Home } from "@/pages/Home";
 import { Login } from "./pages/Login";
+import { RestaurantDetail } from "./pages/RestaurantDetail";
 import { useAuthStore } from "@/shared/store";
 
 function Router() {
@@ -15,6 +16,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
+      <Route path="/restaurant/:id" component={RestaurantDetail} />
       <Route component={NotFound} />
     </Switch>
   );
