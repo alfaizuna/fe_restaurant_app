@@ -24,8 +24,8 @@ export const MyCart = (): JSX.Element => {
   }, []);
 
   const handleCheckout = (restaurantId: string) => {
-    // Handle checkout logic here
-    console.log(`Checkout for restaurant: ${restaurantId}`);
+    // Navigate to checkout page
+    setLocation('/checkout');
   };
 
   // Footer links data

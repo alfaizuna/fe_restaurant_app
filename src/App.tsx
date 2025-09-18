@@ -9,6 +9,7 @@ import { Login } from "./pages/Login";
 import { RestaurantDetail } from "./pages/RestaurantDetail";
 import { Categories } from "./pages/Categories";
 import { MyCart } from "./pages/MyCart";
+import { Checkout } from "./pages/Checkout";
 import { useAuthStore } from "@/shared/store";
 
 function Router() {
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/restaurant/:id" component={RestaurantDetail} />
       <Route path="/categories" component={Categories} />
       <Route path="/cart" component={MyCart} />
+      <Route path="/checkout" component={Checkout} />
       <Route component={NotFound} />
     </Switch>
   );
