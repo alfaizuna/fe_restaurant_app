@@ -41,7 +41,8 @@ export const Home = (): JSX.Element => {
     { 
       icon: "/figmaAssets/category-all-food.png", 
       label: "All Restaurant", 
-      testId: "category-all-restaurant" 
+      testId: "category-all-restaurant",
+      href: "/categories"
     },
     { 
       icon: "/figmaAssets/category-location.png", 
@@ -265,6 +266,7 @@ export const Home = (): JSX.Element => {
                 label={category.label}
                 testId={category.testId}
                 isMobile={isMobile}
+                onClick={() => category.href && (window.location.href = category.href)}
               />
             ))}
           </div>
