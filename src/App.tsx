@@ -12,6 +12,7 @@ import { MyCart } from "./pages/MyCart";
 import { Checkout } from "./pages/Checkout";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
 import { Orders } from "./pages/Orders";
+import { Profile } from "./pages/Profile";
 import { useAuthStore } from "@/shared/store";
 
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/payment-success" component={PaymentSuccess} />
       <Route path="/orders" component={Orders} />
+      <Route path="/profile" component={Profile} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -101,6 +101,20 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
 
           {/* Menu Items */}
           <div className="space-y-3">
+            {/* Profile */}
+            <button 
+              className="flex items-center gap-2 w-full text-left hover:bg-gray-50 p-1 rounded transition-colors"
+              onClick={() => {
+                setIsOpen(false);
+                setLocation('/profile');
+              }}
+            >
+              <img src="/figmaAssets/user-avatar.png" alt="Profile" className="w-5 h-5 rounded-full" />
+              <span className="font-text-sm-medium text-[#0a0d12]">
+                Profile
+              </span>
+            </button>
+
             {/* Delivery Address */}
             <button 
               className="flex items-center gap-2 w-full text-left hover:bg-gray-50 p-1 rounded transition-colors"
@@ -120,7 +134,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
               className="flex items-center gap-2 w-full text-left hover:bg-gray-50 p-1 rounded transition-colors"
               onClick={() => {
                 setIsOpen(false);
-                // TODO: Navigate to orders page
+                setLocation('/orders');
               }}
             >
               <FileText className="w-5 h-5 text-[#181D27]" strokeWidth={1.67} />

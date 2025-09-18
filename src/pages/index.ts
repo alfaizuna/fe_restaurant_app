@@ -6,4 +6,5 @@ export { MyCart } from './MyCart';
 export { Checkout } from './Checkout';
 export { PaymentSuccess } from './PaymentSuccess';
 export { Orders } from './Orders';
+export { Profile } from './Profile';
 export { default as NotFound } from './not-found';
