@@ -12,6 +12,7 @@ module.exports = {
         "text-md-bold": "var(--text-md-bold-font-family)",
         "text-md-medium": "var(--text-md-medium-font-family)",
         "text-md-regular": "var(--text-md-regular-font-family)",
+        "nunito": ["Nunito", "sans-serif"],
         sans: [
           "ui-sans-serif",
           "system-ui",

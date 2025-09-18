@@ -13,3 +13,4 @@ export { OrderStatusFilter } from './OrderStatusFilter';
 export { SearchBar } from './SearchBar';
 export { Sidebar } from './Sidebar';
 export { MobileSidebar } from './MobileSidebar';
+export { ReviewModal } from './ReviewModal';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Header, FooterSection, Sidebar, MobileSidebar, SearchBar, OrderStatusFilter, OrderCard } from '@/components';
+import { Header, FooterSection, Sidebar, MobileSidebar, SearchBar, OrderStatusFilter, OrderCard, ReviewModal } from '@/components';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 // Mock data for orders
@@ -48,6 +48,8 @@ export const Orders: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
   const [activeStatus, setActiveStatus] = useState('done');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<string>('');
   const isMobile = useIsMobile();
 
   // Filter orders based on search and status
@@ -57,6 +59,25 @@ export const Orders: React.FC = () => {
     const matchesStatus = order.status === activeStatus;
     return matchesSearch && matchesStatus;
   });
+
+  const handleOpenReviewModal = (restaurantName: string) => {
+    setSelectedRestaurant(restaurantName);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleCloseReviewModal = () => {
+    setIsReviewModalOpen(false);
+    setSelectedRestaurant('');
+  };
+
+  const handleSubmitReview = (rating: number, review: string) => {
+    console.log('Review submitted:', { 
+      restaurant: selectedRestaurant, 
+      rating, 
+      review 
+    });
+    // Here you would typically send the review to your backend API
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
@@ -123,6 +144,7 @@ export const Orders: React.FC = () => {
                         items={order.items}
                         total={order.total}
                         status={order.status}
+                        onGiveReview={handleOpenReviewModal}
                       />
                     ))
                   ) : (
@@ -206,6 +228,14 @@ export const Orders: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Review Modal */}
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={handleCloseReviewModal}
+        onSubmit={handleSubmitReview}
+        restaurantName={selectedRestaurant}
+      />
     </div>
   );
 };

@@ -11,6 +11,7 @@ interface OrderCardProps {
   }>;
   total: number;
   status: 'done' | 'preparing' | 'onTheWay' | 'delivered' | 'canceled';
+  onGiveReview?: (restaurantName: string) => void;
 }
 
 export const OrderCard: React.FC<OrderCardProps> = ({
@@ -18,7 +19,8 @@ export const OrderCard: React.FC<OrderCardProps> = ({
   restaurantLogo,
   items,
   total,
-  status
+  status,
+  onGiveReview
 }) => {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -68,7 +70,10 @@ export const OrderCard: React.FC<OrderCardProps> = ({
           <span className="text-sm lg:text-base font-medium text-[#0A0D12]">Total</span>
           <span className="text-lg lg:text-xl font-extrabold text-[#0A0D12]">{formatPrice(total)}</span>
         </div>
-        <button className="bg-[#C12116] text-white px-6 py-3 lg:py-2 rounded-full font-bold hover:bg-[#A01015] transition-colors w-full lg:w-auto lg:min-w-[240px] lg:h-12">
+        <button 
+          onClick={() => onGiveReview?.(restaurantName)}
+          className="bg-[#C12116] text-white px-6 py-3 lg:py-2 rounded-full font-bold hover:bg-[#A01015] transition-colors w-full lg:w-auto lg:min-w-[240px] lg:h-12"
+        >
           Give Review
         </button>
       </div>
