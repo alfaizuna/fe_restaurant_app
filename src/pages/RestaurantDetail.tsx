@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Badge, Card, CardContent, Input } from "@/shared/ui";
 import { Star, Minus, Plus, Share2, ArrowLeft } from "lucide-react";
 import { useAuthStore } from "@/shared/store";
-import { UserProfileDropdown } from "@/components";
+import { Header } from "@/components";
 
 interface MenuItem {
   id: number;
@@ -172,73 +172,12 @@ export const RestaurantDetail = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white shadow-md">
-        <div className={`${
-          isMobile 
-            ? 'px-4' 
-            : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'
-        }`}>
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex items-center gap-4">
-              <img
-                className={`${isMobile ? 'w-10 h-10' : 'w-[42px] h-[42px]'}`}
-                alt="Logo"
-                src="/figmaAssets/logo.png"
-              />
-              {!isMobile && (
-                <div className="text-[#0a0d12] text-[32px] font-extrabold leading-[42px]">
-                  Foody
-                </div>
-              )}
-            </div>
-
-            {/* Right side - Cart and User Profile */}
-            <div className="flex items-center gap-6">
-              {user ? (
-                <>
-                  {/* Shopping Cart */}
-                  <button className={`relative hover:opacity-80 transition-all duration-300 ${
-                    isMobile ? 'p-1' : 'p-2'
-                  }`}>
-                    <img 
-                      src="/figmaAssets/bag-icon.svg" 
-                      alt="Shopping Bag"
-                      className="w-7 h-7"
-                    />
-                    {getTotalCartItems() > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                        {getTotalCartItems()}
-                      </span>
-                    )}
-                  </button>
-
-                  {/* User Profile Dropdown */}
-                  <UserProfileDropdown isScrolled={true} isMobile={isMobile} />
-                </>
-              ) : (
-                !isMobile && (
-                  <>
-                    <Button
-                      variant="outline"
-                      className="border-2 border-[#d5d7da] text-[#0a0d12] bg-white hover:bg-gray-50 rounded-full px-6 py-2 font-bold text-base"
-                      onClick={() => window.location.href = '/login?tab=signin'}
-                    >
-                      Sign In
-                    </Button>
-                    <Button
-                      className="bg-[#0a0d12] text-white hover:bg-[#1a1d22] rounded-full px-6 py-2 font-bold text-base"
-                      onClick={() => window.location.href = '/login?tab=signup'}
-                    >
-                      Sign Up
-                    </Button>
-                  </>
-                )
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        variant="page"
+        isMobile={isMobile}
+        cartItemCount={getTotalCartItems()}
+        shadowVariant="md"
+      />
 
       {/* Main Content */}
       <div className={`${

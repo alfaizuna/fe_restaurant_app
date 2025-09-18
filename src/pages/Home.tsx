@@ -5,7 +5,7 @@ import { useAuthStore, useCartStore } from "@/shared/store";
 import { useLocation } from "wouter";
 import { useSampleCart } from "@/hooks/useSampleCart";
 import { 
-  UserProfileDropdown, 
+  Header,
   CategoryCard, 
   RestaurantCard, 
   HeroSection, 
@@ -153,105 +153,12 @@ export const Home = (): JSX.Element => {
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         
         {/* Header */}
-        <header className={`${
-          isMobile 
-            ? 'absolute top-0 left-0 right-0 z-50 bg-transparent' 
-            : `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                isScrolled 
-                  ? 'bg-white shadow-lg' 
-                  : 'bg-transparent'
-              }`
-        }`}>
-          <div className={`${isMobile ? 'px-4' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}`}>
-            <div className={`flex justify-between items-center ${isMobile ? 'h-16 py-2' : 'h-16'}`}>
-              {/* Logo */}
-              <div className="inline-flex items-center gap-[15px]">
-                <img
-                  className={`relative ${isMobile ? 'w-10 h-10' : 'w-[42px] h-[42px]'}`}
-                  alt="Logo"
-                  src={
-                    isMobile 
-                      ? "/figmaAssets/logo-white.svg"
-                      : isScrolled 
-                        ? "/figmaAssets/logo.png" 
-                        : "/figmaAssets/logo-white.svg"
-                  }
-                />
-                {!isMobile && (
-                  <div className={`relative w-fit font-display-md-extrabold font-[number:var(--display-md-extrabold-font-weight)] text-[length:var(--display-md-extrabold-font-size)] tracking-[var(--display-md-extrabold-letter-spacing)] leading-[var(--display-md-extrabold-line-height)] [font-style:var(--display-md-extrabold-font-style)] transition-colors duration-300 ${
-                    isScrolled ? 'text-[#0a0d12]' : 'text-white'
-                  }`}>
-                    Foody
-                  </div>
-                )}
-              </div>
-
-              {/* Right side - Cart and User Profile / Auth Buttons */}
-              <div className="flex items-center gap-6">
-                {user ? (
-                  <>
-                    {/* Shopping Cart */}
-                    <button 
-                      onClick={() => setLocation('/cart')}
-                      className={`relative ${
-                        isMobile 
-                          ? 'p-1 text-white' 
-                          : `p-2 hover:opacity-80 transition-all duration-300 ${
-                              isScrolled ? 'text-[#0a0d12]' : 'text-white'
-                            }`
-                      }`}
-                    >
-                      <img 
-                        src="/figmaAssets/bag-icon.svg" 
-                        alt="Shopping Bag"
-                        className={`${isMobile ? 'w-7 h-7' : 'w-7 h-7'} ${
-                          isScrolled ? 'brightness-0' : 'brightness-0 invert'
-                        }`}
-                      />
-                      {cart.itemCount > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
-                          {cart.itemCount}
-                        </span>
-                      )}
-                    </button>
-
-                    {/* User Profile Dropdown */}
-                    <UserProfileDropdown isScrolled={isScrolled} isMobile={isMobile} />
-                  </>
-                ) : (
-                  !isMobile && (
-                    <>
-                      {/* Sign In Button - Only on desktop */}
-                      <Button
-                        variant="outline"
-                        className={`border-2 rounded-full px-6 py-2 font-bold text-base transition-all duration-300 ${
-                          isScrolled 
-                            ? 'border-[#d5d7da] text-[#0a0d12] bg-white hover:bg-gray-50' 
-                            : 'border-white text-white bg-transparent hover:bg-white hover:text-[#0a0d12]'
-                        }`}
-                        onClick={() => window.location.href = '/login?tab=signin'}
-                      >
-                        Sign In
-                      </Button>
-
-                      {/* Sign Up Button - Only on desktop */}
-                      <Button
-                        className={`rounded-full px-6 py-2 font-bold text-base transition-all duration-300 ${
-                          isScrolled 
-                            ? 'bg-[#0a0d12] text-white hover:bg-[#1a1d22]' 
-                            : 'bg-white text-[#0a0d12] hover:bg-gray-100'
-                        }`}
-                        onClick={() => window.location.href = '/login?tab=signup'}
-                      >
-                        Sign Up
-                      </Button>
-                    </>
-                  )
-                )}
-              </div>
-            </div>
-          </div>
-        </header>
+        <Header 
+          variant="home"
+          isScrolled={isScrolled}
+          isMobile={isMobile}
+          onCartClick={() => setLocation('/cart')}
+        />
         
         {/* Hero Content */}
         <HeroSection isMobile={isMobile} />

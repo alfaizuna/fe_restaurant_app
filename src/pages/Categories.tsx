@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/shared/ui';
 import { useAuthStore } from '@/shared/store';
-import { UserProfileDropdown, RestaurantCard } from '@/components';
+import { Header, RestaurantCard } from '@/components';
 import { FilterModal } from '@/features/restaurant/components/FilterModal';
 import { FilterSidebar } from '@/features/restaurant/components/FilterSidebar';
 import { FilterState, defaultFilters } from '@/shared/types';
@@ -48,77 +48,11 @@ export const Categories = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className={`${
-          isMobile 
-            ? 'px-4' 
-            : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'
-        }`}>
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="inline-flex items-center gap-[15px]">
-              <img
-                className={`relative ${isMobile ? 'w-10 h-10' : 'w-[42px] h-[42px]'}`}
-                alt="Logo"
-                src="/figmaAssets/logo.png"
-              />
-              {!isMobile && (
-                <div className="text-[#0a0d12] text-[32px] font-extrabold leading-[42px]">
-                  Foody
-                </div>
-              )}
-            </div>
-
-            {/* Right side - Cart and User Profile */}
-            <div className="flex items-center gap-4">
-              {user ? (
-                <>
-                  {/* Shopping Cart */}
-                  <button className="relative p-2 text-[#0a0d12] hover:opacity-80">
-                    <img 
-                      src="/figmaAssets/bag-icon.svg" 
-                      alt="Shopping Bag"
-                      className={`${isMobile ? 'w-7 h-7' : 'w-7 h-7'}`}
-                    />
-                    <span className="absolute -top-2 -right-2 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
-                      1
-                    </span>
-                  </button>
-
-                  {/* User Profile */}
-                  {isMobile ? (
-                    <img
-                      className="w-10 h-10 rounded-full"
-                      alt="User Avatar"
-                      src="/figmaAssets/user-avatar.png"
-                    />
-                  ) : (
-                    <UserProfileDropdown isScrolled={true} isMobile={false} />
-                  )}
-                </>
-              ) : (
-                !isMobile && (
-                  <>
-                    <Button
-                      variant="outline"
-                      className="border-2 border-[#d5d7da] text-[#0a0d12] bg-white hover:bg-gray-50 rounded-full px-6 py-2 font-bold text-base"
-                      onClick={() => window.location.href = '/login?tab=signin'}
-                    >
-                      Sign In
-                    </Button>
-                    <Button
-                      className="bg-[#0a0d12] text-white hover:bg-[#1a1d22] rounded-full px-6 py-2 font-bold text-base"
-                      onClick={() => window.location.href = '/login?tab=signup'}
-                    >
-                      Sign Up
-                    </Button>
-                  </>
-                )
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        variant="page"
+        isMobile={isMobile}
+        cartItemCount={1}
+      />
 
       {/* Main Content */}
       <main className={`${

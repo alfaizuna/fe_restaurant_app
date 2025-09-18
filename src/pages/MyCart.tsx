@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/shared/ui";
 import { useCartStore, useAuthStore } from "@/shared/store";
-import { UserProfileDropdown, CartRestaurantSection, FooterSection, SocialMediaIcon } from "@/components";
+import { Header, CartRestaurantSection, FooterSection, SocialMediaIcon } from "@/components";
 import { useLocation } from "wouter";
 
 export const MyCart = (): JSX.Element => {
@@ -84,61 +84,12 @@ export const MyCart = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            {/* Logo */}
-            <div className="inline-flex items-center gap-[15px] cursor-pointer" onClick={() => setLocation('/')}>
-              <img
-                className="relative w-[42px] h-[42px]"
-                alt="Logo"
-                src="/figmaAssets/logo.png"
-              />
-              <div className="relative w-fit font-display-md-extrabold font-[number:var(--display-md-extrabold-font-weight)] text-[length:var(--display-md-extrabold-font-size)] tracking-[var(--display-md-extrabold-letter-spacing)] leading-[var(--display-md-extrabold-line-height)] [font-style:var(--display-md-extrabold-font-style)] text-[#0a0d12]">
-                Foody
-              </div>
-            </div>
-
-            {/* Right side - Cart and User Profile */}
-            <div className="flex items-center gap-6">
-              {user ? (
-                <>
-                  {/* Shopping Cart with Badge */}
-                  <button className="relative p-2 hover:opacity-80 transition-all duration-300">
-                    <img 
-                      src="/figmaAssets/bag-icon.svg" 
-                      alt="Shopping Bag"
-                      className="w-8 h-8 brightness-0"
-                    />
-                    <div className="absolute -top-1 -right-1 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                      {cart.itemCount}
-                    </div>
-                  </button>
-
-                  {/* User Profile Dropdown */}
-                  <UserProfileDropdown isScrolled={true} isMobile={isMobile} />
-                </>
-              ) : (
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant="outline"
-                    className="border-2 border-[#d5d7da] text-[#0a0d12] bg-white hover:bg-gray-50 rounded-full px-6 py-2 font-bold text-base"
-                    onClick={() => setLocation('/login?tab=signin')}
-                  >
-                    Sign In
-                  </Button>
-                  <Button
-                    className="bg-[#0a0d12] text-white hover:bg-[#1a1d22] rounded-full px-6 py-2 font-bold text-base"
-                    onClick={() => setLocation('/login?tab=signup')}
-                  >
-                    Sign Up
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        variant="page"
+        isMobile={isMobile}
+        onLogoClick={() => setLocation('/')}
+        heightVariant={20}
+      />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">

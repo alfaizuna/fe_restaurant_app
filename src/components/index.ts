@@ -1,3 +1,4 @@
+export { Header } from './Header';
 export { UserProfileDropdown } from './UserProfileDropdown';
 export { CategoryCard } from './CategoryCard';
 export { RestaurantCard } from './RestaurantCard';
