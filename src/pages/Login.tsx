@@ -1,9 +1,10 @@
 import { ChevronDownIcon, EyeIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input, Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { useAuthStore } from "@/shared/store";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 
 export const Login = (): JSX.Element => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -17,8 +18,28 @@ export const Login = (): JSX.Element => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
   
-  const { login } = useAuthStore();
+  const { login, isAuthenticated } = useAuthStore();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
+
+  // Get tab from URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabFromUrl = urlParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabFromUrl === 'signup' ? 'signup' : 'signin');
+
+  // Redirect to home if user is already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      setLocation("/");
+    }
+  }, [isAuthenticated, setLocation]);
+
+  // Update URL when tab changes
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', activeTab);
+    window.history.replaceState({}, '', url.toString());
+  }, [activeTab]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +51,8 @@ export const Login = (): JSX.Element => {
         title: "Welcome back!",
         description: "You have successfully logged in.",
       });
+      // Redirect to home page after successful login
+      setLocation("/");
     } catch (error) {
       toast({
         title: "Error",
@@ -101,17 +124,17 @@ export const Login = (): JSX.Element => {
               </div>
             </div>
 
-            <Tabs defaultValue="signup" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-[#f5f5f5] rounded-2xl p-2 h-auto">
                 <TabsTrigger
                   value="signin"
-                  className="h-9 md:h-10 bg-transparent rounded-lg md:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-shadow-card data-[state=inactive]:bg-transparent data-[state=inactive]:shadow-none font-text-md-medium font-[number:var(--text-md-medium-font-weight)] text-sm md:text-[length:var(--text-md-medium-font-size)] tracking-[var(--text-md-medium-letter-spacing)] leading-[var(--text-md-medium-line-height)] [font-style:var(--text-md-medium-font-style)] data-[state=active]:text-[#0a0d12] data-[state=inactive]:text-[#535862]"
+                  className="h-9 md:h-10 bg-transparent rounded-lg md:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-shadow-card data-[state=inactive]:bg-transparent data-[state=inactive]:shadow-none data-[state=active]:font-text-md-bold data-[state=inactive]:font-text-md-medium font-[number:var(--text-md-medium-font-weight)] text-sm md:text-[length:var(--text-md-medium-font-size)] tracking-[var(--text-md-medium-letter-spacing)] leading-[var(--text-md-medium-line-height)] [font-style:var(--text-md-medium-font-style)] data-[state=active]:text-[#0a0d12] data-[state=inactive]:text-[#535862]"
                 >
                   Sign in
                 </TabsTrigger>
                 <TabsTrigger
                   value="signup"
-                  className="h-9 md:h-10 bg-white rounded-lg md:rounded-xl shadow-shadow-card data-[state=active]:bg-white data-[state=active]:shadow-shadow-card data-[state=inactive]:bg-transparent data-[state=inactive]:shadow-none font-text-md-bold font-[number:var(--text-md-bold-font-weight)] text-sm md:text-[length:var(--text-md-bold-font-size)] tracking-[var(--text-md-bold-letter-spacing)] leading-[var(--text-md-bold-line-height)] [font-style:var(--text-md-bold-font-style)] data-[state=active]:text-[#0a0d12] data-[state=inactive]:text-[#535862]"
+                  className="h-9 md:h-10 bg-transparent rounded-lg md:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-shadow-card data-[state=inactive]:bg-transparent data-[state=inactive]:shadow-none data-[state=active]:font-text-md-bold data-[state=inactive]:font-text-md-medium font-[number:var(--text-md-medium-font-weight)] text-sm md:text-[length:var(--text-md-medium-font-size)] tracking-[var(--text-md-medium-letter-spacing)] leading-[var(--text-md-medium-line-height)] [font-style:var(--text-md-medium-font-style)] data-[state=active]:text-[#0a0d12] data-[state=inactive]:text-[#535862]"
                 >
                   Sign up
                 </TabsTrigger>

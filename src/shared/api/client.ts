@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api'
+const API_BASE_URL = 'https://berestaurantappformentee-production-7e24.up.railway.app/api'
 
 export class ApiClient {
   private baseURL: string
@@ -15,6 +15,7 @@ export class ApiClient {
     
     const config: RequestInit = {
       headers: {
+        'accept': 'application/json',
         'Content-Type': 'application/json',
         ...options.headers,
       },

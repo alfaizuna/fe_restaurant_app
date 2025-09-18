@@ -7,6 +7,15 @@
   }
 }
 
+/* Hide scrollbar for horizontal scroll */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
 :root {
   --display-md-extrabold-font-family: "Nunito", Helvetica;
   --display-md-extrabold-font-size: 32px;

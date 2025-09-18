@@ -37,16 +37,18 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           set({ isLoading: true, error: null })
           
           try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch('https://berestaurantappformentee-production-7e24.up.railway.app/api/auth/login', {
               method: 'POST',
               headers: {
+                'accept': 'application/json',
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({ email, password }),
             })
 
             if (!response.ok) {
-              throw new Error('Login failed')
+              const errorData = await response.json().catch(() => ({}))
+              throw new Error(errorData.message || 'Login failed')
             }
 
             const user = await response.json()
@@ -61,6 +63,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               error: error instanceof Error ? error.message : 'Login failed',
               isLoading: false 
             })
+            throw error
           }
         },
 
