@@ -8,3 +8,8 @@ export { FooterSection } from './FooterSection';
 export { QuantityControl } from './QuantityControl';
 export { CartItemCard } from './CartItemCard';
 export { CartRestaurantSection } from './CartRestaurantSection';
+export { OrderCard } from './OrderCard';
+export { OrderStatusFilter } from './OrderStatusFilter';
+export { SearchBar } from './SearchBar';
+export { Sidebar } from './Sidebar';
+export { MobileSidebar } from './MobileSidebar';
