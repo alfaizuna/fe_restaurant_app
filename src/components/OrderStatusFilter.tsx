@@ -6,10 +6,10 @@ interface OrderStatusFilterProps {
 }
 
 const statusOptions = [
-  { id: 'done', label: 'Done', active: true },
   { id: 'preparing', label: 'Preparing', active: false },
   { id: 'onTheWay', label: 'On the Way', active: false },
   { id: 'delivered', label: 'Delivered', active: false },
+  { id: 'done', label: 'Done', active: true },
   { id: 'canceled', label: 'Canceled', active: false },
 ];
 
@@ -18,8 +18,8 @@ export const OrderStatusFilter: React.FC<OrderStatusFilterProps> = ({
   onStatusChange
 }) => {
   return (
-    <div className="flex flex-col gap-3">
-      <h3 className="text-base lg:text-lg font-bold text-[#0A0D12]">Status</h3>
+    <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
+      <h3 className="text-base lg:text-lg font-bold text-[#0A0D12] flex-shrink-0">Status</h3>
       <div className="flex flex-wrap gap-2 lg:gap-3">
         {statusOptions.map((status) => (
           <button
