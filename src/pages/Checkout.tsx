@@ -5,9 +5,11 @@ import { useCartStore } from '@/shared/store';
 import { CheckoutDeliveryAddress } from '../features/checkout/components/CheckoutDeliveryAddress';
 import { CheckoutCartSection } from '../features/checkout/components/CheckoutCartSection';
 import { CheckoutPaymentSection } from '../features/checkout/components/CheckoutPaymentSection';
+import { useLocation } from 'wouter';
 
 export const Checkout: React.FC = () => {
-  const { cart, addItem } = useCartStore();
+  const { cart, addItem, clearCart } = useCartStore();
+  const [, setLocation] = useLocation();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('BNI');
   const [deliveryAddress, setDeliveryAddress] = useState({
     address: 'Jl. Sudirman No. 25, Jakarta Pusat, 10220',
@@ -74,11 +76,24 @@ export const Checkout: React.FC = () => {
   }, []);
 
   const handleBuy = () => {
-    // Handle checkout process
-    console.log('Processing checkout...');
-    console.log('Payment method:', selectedPaymentMethod);
-    console.log('Total:', totalWithFees);
-    console.log('Cart items:', cart);
+    // Store checkout data in sessionStorage for the success page
+    const checkoutData = {
+      paymentMethod: selectedPaymentMethod,
+      itemCount: cart.itemCount,
+      subtotal: cart.totalAmount,
+      deliveryFee: deliveryFee,
+      serviceFee: serviceFee,
+      total: totalWithFees,
+      date: new Date().toISOString(),
+    };
+    
+    sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+    
+    // Clear the cart after successful checkout
+    clearCart();
+    
+    // Navigate to success page
+    setLocation('/payment-success');
   };
 
   if (cart.itemCount === 0) {

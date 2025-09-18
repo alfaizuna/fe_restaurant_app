@@ -10,19 +10,23 @@ import { RestaurantDetail } from "./pages/RestaurantDetail";
 import { Categories } from "./pages/Categories";
 import { MyCart } from "./pages/MyCart";
 import { Checkout } from "./pages/Checkout";
+import { PaymentSuccess } from "./pages/PaymentSuccess";
+import { Orders } from "./pages/Orders";
 import { useAuthStore } from "@/shared/store";
 
 function Router() {
   const { isAuthenticated } = useAuthStore();
 
   return (
-    <Switch>
+        <Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
       <Route path="/restaurant/:id" component={RestaurantDetail} />
       <Route path="/categories" component={Categories} />
       <Route path="/cart" component={MyCart} />
       <Route path="/checkout" component={Checkout} />
+      <Route path="/payment-success" component={PaymentSuccess} />
+      <Route path="/orders" component={Orders} />
       <Route component={NotFound} />
     </Switch>
   );
