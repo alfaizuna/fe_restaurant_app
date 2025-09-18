@@ -1,6 +1,7 @@
 export * from './auth'
 export * from './restaurant'
 export * from './filters'
+export * from './cart'
 
 // Common types
 export interface ApiResponse<T> {

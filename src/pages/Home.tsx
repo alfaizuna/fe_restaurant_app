@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from "@/shared/ui";
 import { ShoppingCart, Star, Clock, Users, MapPin, Phone, Search } from "lucide-react";
-import { useAuthStore } from "@/shared/store";
+import { useAuthStore, useCartStore } from "@/shared/store";
+import { useLocation } from "wouter";
+import { useSampleCart } from "@/hooks/useSampleCart";
 import { 
   UserProfileDropdown, 
   CategoryCard, 
@@ -13,6 +15,9 @@ import {
 
 export const Home = (): JSX.Element => {
   const { user } = useAuthStore();
+  const { cart } = useCartStore();
+  const { addSampleData } = useSampleCart();
+  const [location, setLocation] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -186,13 +191,16 @@ export const Home = (): JSX.Element => {
                 {user ? (
                   <>
                     {/* Shopping Cart */}
-                    <button className={`relative ${
-                      isMobile 
-                        ? 'p-1 text-white' 
-                        : `p-2 hover:opacity-80 transition-all duration-300 ${
-                            isScrolled ? 'text-[#0a0d12]' : 'text-white'
-                          }`
-                    }`}>
+                    <button 
+                      onClick={() => setLocation('/cart')}
+                      className={`relative ${
+                        isMobile 
+                          ? 'p-1 text-white' 
+                          : `p-2 hover:opacity-80 transition-all duration-300 ${
+                              isScrolled ? 'text-[#0a0d12]' : 'text-white'
+                            }`
+                      }`}
+                    >
                       <img 
                         src="/figmaAssets/bag-icon.svg" 
                         alt="Shopping Bag"
@@ -200,9 +208,11 @@ export const Home = (): JSX.Element => {
                           isScrolled ? 'brightness-0' : 'brightness-0 invert'
                         }`}
                       />
-                      <span className="absolute -top-2 -right-2 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
-                        0
-                      </span>
+                      {cart.itemCount > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
+                          {cart.itemCount}
+                        </span>
+                      )}
                     </button>
 
                     {/* User Profile Dropdown */}
@@ -288,9 +298,17 @@ export const Home = (): JSX.Element => {
             }`}>
               Recommended
             </h2>
-            <button className="text-[#c12116] font-extrabold hover:underline" data-testid="button-see-all">
-              See All
-            </button>
+            <div className="flex items-center gap-4">
+              <Button
+                onClick={addSampleData}
+                className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-full"
+              >
+                Add Sample Items
+              </Button>
+              <button className="text-[#c12116] font-extrabold hover:underline" data-testid="button-see-all">
+                See All
+              </button>
+            </div>
           </div>
           
           <div className={`${

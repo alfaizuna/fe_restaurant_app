@@ -8,6 +8,7 @@ import { Home } from "@/pages/Home";
 import { Login } from "./pages/Login";
 import { RestaurantDetail } from "./pages/RestaurantDetail";
 import { Categories } from "./pages/Categories";
+import { MyCart } from "./pages/MyCart";
 import { useAuthStore } from "@/shared/store";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/restaurant/:id" component={RestaurantDetail} />
       <Route path="/categories" component={Categories} />
+      <Route path="/cart" component={MyCart} />
       <Route component={NotFound} />
     </Switch>
   );

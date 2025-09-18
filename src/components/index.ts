@@ -4,3 +4,6 @@ export { RestaurantCard } from './RestaurantCard';
 export { HeroSection } from './HeroSection';
 export { SocialMediaIcon } from './SocialMediaIcon';
 export { FooterSection } from './FooterSection';
+export { QuantityControl } from './QuantityControl';
+export { CartItemCard } from './CartItemCard';
+export { CartRestaurantSection } from './CartRestaurantSection';
