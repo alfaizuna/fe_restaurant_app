@@ -147,6 +147,13 @@ export const RestaurantDetail = (): JSX.Element => {
     return menuItems.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const getTotalCartPrice = () => {
+    return menuItems.reduce((total, item) => {
+      const price = parseInt(item.price.replace(/[^\d]/g, ''));
+      return total + (price * item.quantity);
+    }, 0);
+  };
+
   const updateItemQuantity = (itemId: number, action: 'add' | 'remove') => {
     setMenuItems(prev => prev.map(item => 
       item.id === itemId 
@@ -200,7 +207,7 @@ export const RestaurantDetail = (): JSX.Element => {
                       className="w-7 h-7"
                     />
                     {getTotalCartItems() > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
+                      <span className="absolute -top-1 -right-1 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
                         {getTotalCartItems()}
                       </span>
                     )}
@@ -238,7 +245,7 @@ export const RestaurantDetail = (): JSX.Element => {
         isMobile 
           ? 'px-4 py-6' 
           : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'
-      }`}>
+      } ${getTotalCartItems() > 0 ? (isMobile ? 'pb-20' : 'pb-24') : ''}`}>
         {/* Restaurant Images & Info Section */}
         <div className={`${
           isMobile 
@@ -427,14 +434,14 @@ export const RestaurantDetail = (): JSX.Element => {
           </div>
 
           {/* Menu Grid */}
-          <div className={`grid gap-5 ${
-            isMobile ? 'grid-cols-2 mb-6' : 'grid-cols-4 mb-8'
+          <div className={`grid gap-4 ${
+            isMobile ? 'grid-cols-2 mb-6' : 'grid-cols-4 gap-5 mb-8'
           }`}>
             {menuItems.map((item) => (
               <Card key={item.id} className="bg-white shadow-md rounded-2xl overflow-hidden">
                 <CardContent className="p-0">
                   {/* Food Image */}
-                  <div className={isMobile ? 'h-[180px]' : 'h-[285px]'}>
+                  <div className={isMobile ? 'h-[140px]' : 'h-[285px]'}>
                     <img
                       src={item.image}
                       alt={item.name}
@@ -448,59 +455,59 @@ export const RestaurantDetail = (): JSX.Element => {
                       ? 'p-3 flex flex-col gap-2' 
                       : 'p-4 flex justify-between items-center'
                   }`}>
-                    <div className="flex flex-col">
+                    <div className={`flex flex-col ${isMobile ? 'mb-2' : ''}`}>
                       <h3 className={`font-medium text-[#0a0d12] mb-1 ${
                         isMobile ? 'text-sm' : 'text-base'
                       }`}>
                         {item.name}
                       </h3>
                       <p className={`font-extrabold text-[#0a0d12] ${
-                        isMobile ? 'text-base' : 'text-lg'
+                        isMobile ? 'text-sm' : 'text-lg'
                       }`}>
                         {item.price}
                       </p>
                     </div>
 
                     {/* Add/Quantity Controls */}
-                    <div className={isMobile ? 'mt-2' : ''}>
+                    <div className={`flex ${isMobile ? 'justify-center w-full' : 'justify-end'}`}>
                       {item.quantity === 0 ? (
                         <Button
                           onClick={() => updateItemQuantity(item.id, 'add')}
                           className={`bg-[#C12116] hover:bg-[#A01E13] text-white rounded-full font-bold ${
                             isMobile 
-                              ? 'px-3 py-1.5 text-sm w-full' 
-                              : 'px-4 py-2 text-base'
+                              ? 'px-4 py-1.5 text-xs w-full h-8' 
+                              : 'px-4 py-2 text-base w-20 h-10'
                           }`}
                         >
                           Add
                         </Button>
                       ) : (
-                        <div className={`flex items-center ${
-                          isMobile ? 'gap-2 justify-center' : 'gap-4'
+                        <div className={`flex items-center justify-center ${
+                          isMobile ? 'gap-2' : 'gap-4'
                         }`}>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => updateItemQuantity(item.id, 'remove')}
-                            className={`rounded-full border border-[#D5D7DA] p-0 hover:bg-gray-50 ${
+                            className={`rounded-full border border-[#D5D7DA] p-0 hover:bg-gray-50 flex items-center justify-center ${
                               isMobile ? 'w-7 h-7' : 'w-8 h-8'
                             }`}
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-[#0a0d12]`} />
                           </Button>
                           <span className={`font-semibold text-[#0a0d12] min-w-[20px] text-center ${
-                            isMobile ? 'text-base' : 'text-lg'
+                            isMobile ? 'text-sm' : 'text-lg'
                           }`}>
                             {item.quantity}
                           </span>
                           <Button
                             size="sm"
                             onClick={() => updateItemQuantity(item.id, 'add')}
-                            className={`rounded-full bg-[#C12116] hover:bg-[#A01E13] text-white p-0 ${
+                            className={`rounded-full bg-[#C12116] hover:bg-[#A01E13] text-white p-0 flex items-center justify-center ${
                               isMobile ? 'w-7 h-7' : 'w-8 h-8'
                             }`}
                           >
-                            <Plus className="w-3 h-3" />
+                            <Plus className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-white`} />
                           </Button>
                         </div>
                       )}
@@ -642,7 +649,7 @@ export const RestaurantDetail = (): JSX.Element => {
       {/* Footer */}
       <footer className={`bg-[#0a0d12] text-white border-t border-[#d5d7da] ${
         isMobile ? 'py-10' : 'py-20'
-      }`}>
+      } ${getTotalCartItems() > 0 ? (isMobile ? 'pb-24' : 'pb-32') : ''}`}>
         <div className={`${
           isMobile 
             ? 'px-4' 
@@ -866,6 +873,49 @@ export const RestaurantDetail = (): JSX.Element => {
           )}
         </div>
       </footer>
+
+      {/* Floating Cart Widget */}
+      {getTotalCartItems() > 0 && (
+        <div className={`fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-[#d5d7da] ${
+          isMobile ? 'px-4 py-3' : 'px-8 py-4'
+        }`}>
+          <div className={`${
+            isMobile 
+              ? 'flex justify-between items-center' 
+              : 'max-w-7xl mx-auto flex justify-between items-center'
+          }`}>
+            <div className="flex items-center gap-2">
+              <img 
+                src="/figmaAssets/bag-icon.svg" 
+                alt="Shopping Bag"
+                className={isMobile ? 'w-6 h-6' : 'w-8 h-8'}
+              />
+              <span className={`text-[#0a0d12] ${
+                isMobile ? 'text-base' : 'text-lg'
+              }`}>
+                {getTotalCartItems()} Items
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <span className={`font-extrabold text-[#0a0d12] ${
+                isMobile ? 'text-lg' : 'text-xl'
+              }`}>
+                Rp{getTotalCartPrice().toLocaleString('id-ID')}
+              </span>
+              <Button
+                className={`bg-[#C12116] hover:bg-[#A01E13] text-white rounded-full font-bold ${
+                  isMobile 
+                    ? 'px-6 py-2 text-sm' 
+                    : 'px-8 py-3 text-base'
+                }`}
+              >
+                Checkout
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
