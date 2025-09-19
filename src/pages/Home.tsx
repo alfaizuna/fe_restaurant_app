@@ -206,19 +206,8 @@ export const Home = (): JSX.Element => {
               }`}>
                 Recommended
               </h2>
-              {user && (
-                <p className="text-sm text-gray-600 mt-1">
-                  Personalized recommendations for {user.name}
-                </p>
-              )}
             </div>
             <div className="flex items-center gap-4">
-              <Button
-                onClick={addSampleData}
-                className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-full"
-              >
-                Add Sample Items
-              </Button>
               <button className="text-[#c12116] font-extrabold hover:underline" data-testid="button-see-all">
                 See All
               </button>
