@@ -4,9 +4,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
+    "dev": "tsx server/index.ts",
     "build": "vite build",
-    "start": "vite preview",
+    "start": "NODE_ENV=production tsx server/index.ts",
     "preview": "vite preview",
     "check": "tsc",
     "test": "vitest",
