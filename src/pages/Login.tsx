@@ -11,14 +11,17 @@ export const Login = (): JSX.Element => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   // Sign up form states
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
-  const { login, isAuthenticated } = useAuthStore();
+  const { login, register, isAuthenticated } = useAuthStore();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
@@ -43,6 +46,26 @@ export const Login = (): JSX.Element => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate fields
+    if (!email.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter your email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!password.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter your password.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     
     try {
@@ -66,6 +89,53 @@ export const Login = (): JSX.Element => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all fields
+    if (!name.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter your name.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!email.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter your email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!phoneNumber.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter your phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!password.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a password.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!confirmPassword.trim()) {
+      toast({
+        title: "Error",
+        description: "Please confirm your password.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSignUpLoading(true);
     
     if (password !== confirmPassword) {
@@ -79,16 +149,17 @@ export const Login = (): JSX.Element => {
     }
     
     try {
-      // TODO: Implement sign up logic
-      console.log({ name, email, phoneNumber, password, confirmPassword });
+      await register(name, email, phoneNumber, password);
       toast({
         title: "Account created!",
-        description: "Your account has been successfully created.",
+        description: "Your account has been successfully created and you are now logged in.",
       });
+      // Redirect to home page after successful registration
+      setLocation("/");
     } catch (error) {
       toast({
         title: "Error",
-        description: "An error occurred during registration. Please try again.",
+        description: error instanceof Error ? error.message : "An error occurred during registration. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -155,14 +226,17 @@ export const Login = (): JSX.Element => {
 
                   <div className="relative w-full">
                     <Input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       className="h-12 md:h-14 px-3 py-2 rounded-xl border border-solid border-[#d5d7da] font-text-md-regular font-[number:var(--text-md-regular-font-weight)] text-sm md:text-[length:var(--text-md-regular-font-size)] tracking-[var(--text-md-regular-letter-spacing)] leading-[var(--text-md-regular-line-height)] [font-style:var(--text-md-regular-font-style)] placeholder:text-[#717680]"
                     />
-                    <EyeIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#717680]" />
+                    <EyeIcon 
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#717680] cursor-pointer hover:text-[#535862] transition-colors"
+                      onClick={() => setShowPassword(!showPassword)}
+                    />
                   </div>
 
                   <div className="inline-flex items-center gap-2 relative flex-[0_0_auto]">
@@ -227,26 +301,32 @@ export const Login = (): JSX.Element => {
 
                   <div className="relative w-full">
                     <Input
-                      type="password"
+                      type={showSignUpPassword ? "text" : "password"}
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       className="h-12 md:h-14 px-3 py-2 rounded-xl border border-solid border-[#d5d7da] font-text-md-regular font-[number:var(--text-md-regular-font-weight)] text-sm md:text-[length:var(--text-md-regular-font-size)] tracking-[var(--text-md-regular-letter-spacing)] leading-[var(--text-md-regular-line-height)] [font-style:var(--text-md-regular-font-style)] placeholder:text-[#717680]"
                     />
-                    <EyeIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#717680]" />
+                    <EyeIcon 
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#717680] cursor-pointer hover:text-[#535862] transition-colors"
+                      onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                    />
                   </div>
 
                   <div className="relative w-full">
                     <Input
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm Password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                       className="h-12 md:h-14 px-3 py-2 rounded-xl border border-solid border-[#d5d7da] font-text-md-regular font-[number:var(--text-md-regular-font-weight)] text-sm md:text-[length:var(--text-md-regular-font-size)] tracking-[var(--text-md-regular-letter-spacing)] leading-[var(--text-md-regular-line-height)] [font-style:var(--text-md-regular-font-style)] placeholder:text-[#717680]"
                     />
-                    <EyeIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#717680]" />
+                    <EyeIcon 
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#717680] cursor-pointer hover:text-[#535862] transition-colors"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    />
                   </div>
                 </form>
 

@@ -1,11 +1,12 @@
 export interface User {
-  id: string
+  id: number
   email: string
   name: string
+  phone?: string
   avatar?: string
   role?: 'user' | 'admin'
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface LoginCredentials {
@@ -16,6 +17,6 @@ export interface LoginCredentials {
 export interface RegisterData {
   name: string
   email: string
+  phone: string
   password: string
-  confirmPassword: string
 }

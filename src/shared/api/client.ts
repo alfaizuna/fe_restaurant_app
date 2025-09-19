@@ -1,5 +1,21 @@
 const API_BASE_URL = 'https://berestaurantappformentee-production-7e24.up.railway.app/api'
 
+// Helper function to get token from localStorage
+const getToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    const authStorage = localStorage.getItem('auth-storage');
+    if (authStorage) {
+      try {
+        const parsed = JSON.parse(authStorage);
+        return parsed.state?.token || null;
+      } catch {
+        return null;
+      }
+    }
+  }
+  return null;
+};
+
 export class ApiClient {
   private baseURL: string
 
@@ -12,11 +28,13 @@ export class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`
+    const token = getToken();
     
     const config: RequestInit = {
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers,
       },
       ...options,

@@ -48,7 +48,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
         onClick={toggleDropdown}
         className={`flex items-center cursor-pointer hover:opacity-80 transition-all duration-300 ${
           isMobile 
-            ? 'gap-0 text-white' 
+            ? 'gap-2 text-[#0a0d12]' 
             : `gap-3 ${isScrolled ? 'text-[#0a0d12]' : 'text-white'}`
         }`}
       >
@@ -57,7 +57,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
           alt="Profile"
           className={`${
             isMobile 
-              ? 'w-8 h-8 rounded-full border-2 border-white' 
+              ? 'w-8 h-8 rounded-full border-2 border-gray-300' 
               : `w-8 h-8 rounded-full border-2 transition-all duration-300 ${
                   isScrolled ? 'border-gray-300' : 'border-white'
                 }`
@@ -65,10 +65,10 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
         />
         {!isMobile && (
           <>
-            <span className={`font-text-md-medium transition-colors duration-300 ${
+            <span className={`font-medium transition-colors duration-300 ${
               isScrolled ? 'text-[#0a0d12]' : 'text-white'
             }`}>
-              {user?.name || 'John Doe'}
+              {user?.name || 'User'}
             </span>
             <ChevronDown 
               className={`w-4 h-4 transition-transform duration-200 ${
@@ -76,6 +76,11 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
               } ${isScrolled ? 'text-[#0a0d12]' : 'text-white'}`}
             />
           </>
+        )}
+        {isMobile && (
+          <span className="font-medium text-[#0a0d12] text-sm">
+            {user?.name || 'User'}
+          </span>
         )}
       </button>
 
@@ -91,8 +96,8 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
               alt="Profile"
               className="w-9 h-9 rounded-full"
             />
-            <span className="font-text-md-bold text-[#0a0d12]">
-              {user?.name || 'John Doe'}
+            <span className="font-bold text-[#0a0d12]">
+              {user?.name || 'User'}
             </span>
           </div>
 
@@ -102,7 +107,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
           {/* Menu Items */}
           <div className="space-y-3">
             {/* Profile */}
-            <button 
+            {/* <button 
               className="flex items-center gap-2 w-full text-left hover:bg-gray-50 p-1 rounded transition-colors"
               onClick={() => {
                 setIsOpen(false);
@@ -113,7 +118,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
               <span className="font-text-sm-medium text-[#0a0d12]">
                 Profile
               </span>
-            </button>
+            </button> */}
 
             {/* Delivery Address */}
             <button 

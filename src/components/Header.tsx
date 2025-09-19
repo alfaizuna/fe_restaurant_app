@@ -78,13 +78,10 @@ export const Header = ({
   // Determine header styling based on variant
   const getHeaderClassName = () => {
     if (variant === 'home') {
-      return isMobile 
-        ? 'absolute top-0 left-0 right-0 z-50 bg-transparent' 
-        : `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-            isScrolled 
-              ? 'bg-white shadow-lg' 
-              : 'bg-transparent'
-          }`;
+      const baseClasses = `${isMobile ? 'absolute' : 'fixed'} top-0 left-0 right-0 z-50 transition-all duration-300`;
+      const bgClasses = isScrolled ? 'bg-white shadow-lg' : 'bg-transparent';
+
+      return `${baseClasses} ${bgClasses}`;
     }
     return `bg-white shadow-${shadowVariant}`;
   };
@@ -92,11 +89,9 @@ export const Header = ({
   // Determine logo source based on variant and state
   const getLogoSource = () => {
     if (variant === 'home') {
-      return isMobile 
-        ? "/figmaAssets/logo-white.svg"
-        : isScrolled 
-          ? "/figmaAssets/logo.png" 
-          : "/figmaAssets/logo-white.svg";
+      return isScrolled 
+        ? "/figmaAssets/logo.png" 
+        : "/figmaAssets/logo-white.svg";
     }
     return "/figmaAssets/logo.png";
   };
@@ -140,18 +135,26 @@ export const Header = ({
   const getCartIconClass = () => {
     if (variant === 'home') {
       return `${isMobile ? 'w-7 h-7' : 'w-7 h-7'} ${
-        isScrolled ? 'brightness-0' : 'brightness-0 invert'
+        isScrolled ? '' : 'brightness-0 invert'
       }`;
     }
     // Special case for MyCart page (height 20)
     if (heightVariant === 20) {
-      return 'w-8 h-8 brightness-0';
+      return 'w-8 h-8';
     }
     return isMobile ? 'w-7 h-7' : 'w-7 h-7';
   };
 
+
+
   return (
-    <header className={getHeaderClassName()}>
+    <header 
+      className={getHeaderClassName()}
+      style={{
+        backgroundColor: variant === 'home' && isScrolled ? 'white' : undefined,
+        boxShadow: variant === 'home' && isScrolled ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : undefined
+      }}
+    >
       <div className={`${
         variant === 'page' && isMobile 
           ? 'px-4' 
@@ -172,8 +175,8 @@ export const Header = ({
               alt="Logo"
               src={getLogoSource()}
             />
-            {!isMobile && (
-              <div className={`relative w-fit font-display-md-extrabold font-[number:var(--display-md-extrabold-font-weight)] text-[length:var(--display-md-extrabold-font-size)] tracking-[var(--display-md-extrabold-letter-spacing)] leading-[var(--display-md-extrabold-line-height)] [font-style:var(--display-md-extrabold-font-style)] transition-colors duration-300 ${getTextColor()}`}>
+            {(!isMobile || (variant === 'home' && isScrolled)) && (
+              <div className={`relative w-fit font-extrabold text-3xl transition-colors duration-300 ${getTextColor()}`}>
                 Foody
               </div>
             )}
@@ -188,9 +191,9 @@ export const Header = ({
                   onClick={handleCartClick}
                   className={`relative ${
                     isMobile 
-                      ? 'p-1' 
+                      ? 'p-1 transition-all duration-300' 
                       : `p-2 hover:opacity-80 transition-all duration-300`
-                  } ${variant === 'home' && isMobile ? 'text-white' : ''}`}
+                  }`}
                 >
                   <img 
                     src="/figmaAssets/bag-icon.svg" 
@@ -198,25 +201,17 @@ export const Header = ({
                     className={getCartIconClass()}
                   />
                   {totalCartItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
+                    <span className="absolute -top-2 -right-2 bg-[#c12116] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold z-10">
                       {totalCartItems}
                     </span>
                   )}
                 </button>
 
                 {/* User Profile */}
-                {isMobile && variant !== 'home' ? (
-                  <img
-                    className="w-10 h-10 rounded-full"
-                    alt="User Avatar"
-                    src="/figmaAssets/user-avatar.png"
-                  />
-                ) : (
-                  <UserProfileDropdown 
-                    isScrolled={variant === 'home' ? isScrolled : true} 
-                    isMobile={isMobile} 
-                  />
-                )}
+                <UserProfileDropdown 
+                  isScrolled={variant === 'home' ? isScrolled : true} 
+                  isMobile={isMobile} 
+                />
               </>
             ) : (
               !isMobile && (

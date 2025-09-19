@@ -198,13 +198,20 @@ export const Home = (): JSX.Element => {
             : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'
         }`}>
           <div className="flex justify-between items-center mb-4">
-            <h2 className={`${
-              isMobile 
-                ? 'text-2xl font-extrabold text-[#0a0d12]' 
-                : 'text-2xl font-text-xl-semibold text-[#0a0d12]'
-            }`}>
-              Recommended
-            </h2>
+            <div>
+              <h2 className={`${
+                isMobile 
+                  ? 'text-2xl font-extrabold text-[#0a0d12]' 
+                  : 'text-2xl font-text-xl-semibold text-[#0a0d12]'
+              }`}>
+                Recommended
+              </h2>
+              {user && (
+                <p className="text-sm text-gray-600 mt-1">
+                  Personalized recommendations for {user.name}
+                </p>
+              )}
+            </div>
             <div className="flex items-center gap-4">
               <Button
                 onClick={addSampleData}
