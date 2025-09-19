@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/shared/ui";
 import { Star, MapPin } from "lucide-react";
 
@@ -13,6 +13,37 @@ interface RestaurantCardProps {
   'data-testid'?: string
 }
 
+// Helper function to get initials from restaurant name
+const getInitials = (name: string): string => {
+  return name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase())
+    .slice(0, 2) // Take only first 2 initials
+    .join('');
+}
+
+// Helper function to generate a background color based on the name
+const getInitialsColor = (name: string): string => {
+  const colors = [
+    'bg-red-500',
+    'bg-blue-500', 
+    'bg-green-500',
+    'bg-yellow-500',
+    'bg-purple-500',
+    'bg-pink-500',
+    'bg-indigo-500',
+    'bg-teal-500'
+  ];
+  
+  // Simple hash function to consistently assign colors based on name
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  return colors[Math.abs(hash) % colors.length];
+}
+
 export const RestaurantCard = ({
   name,
   rating,
@@ -23,6 +54,25 @@ export const RestaurantCard = ({
   variant = 'default',
   'data-testid': testId
 }: RestaurantCardProps) => {
+  const [imageError, setImageError] = useState(false);
+  
+  // Reset error state when image prop changes
+  React.useEffect(() => {
+    setImageError(false);
+  }, [image]);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  // Fallback initials component
+  const InitialsAvatar = ({ className }: { className: string }) => (
+    <div className={`${className} ${getInitialsColor(name)} flex items-center justify-center text-white font-bold`}>
+      <span className={isMobile ? 'text-lg' : 'text-xl'}>
+        {getInitials(name)}
+      </span>
+    </div>
+  );
   if (variant === 'compact') {
     return (
       <Card 
@@ -39,11 +89,18 @@ export const RestaurantCard = ({
                 ? 'w-[90px] h-[90px] bg-white rounded-xl flex-shrink-0 overflow-hidden' 
                 : 'w-16 h-16 bg-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden'
             }`}>
-              <img 
-                src={image} 
-                alt={name} 
-                className="w-full h-full object-cover"
-              />
+              {imageError ? (
+                <InitialsAvatar 
+                  className={`w-full h-full rounded-xl ${isMobile ? 'rounded-xl' : 'rounded-2xl'}`}
+                />
+              ) : (
+                <img 
+                  src={image} 
+                  alt={name} 
+                  className="w-full h-full object-cover"
+                  onError={handleImageError}
+                />
+              )}
             </div>
             
             <div className="flex-1 min-w-0">
@@ -79,11 +136,16 @@ export const RestaurantCard = ({
       onClick={onClick}
     >
       <div className="relative">
-        <img 
-          src={image} 
-          alt={name} 
-          className="w-full h-48 object-cover"
-        />
+        {imageError ? (
+          <InitialsAvatar className="w-full h-48" />
+        ) : (
+          <img 
+            src={image} 
+            alt={name} 
+            className="w-full h-48 object-cover"
+            onError={handleImageError}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
       </div>
       <div className="p-6">

@@ -4,13 +4,15 @@ import { ShoppingCart, Star, Clock, Users, MapPin, Phone, Search } from "lucide-
 import { useAuthStore, useCartStore } from "@/shared/store";
 import { useLocation } from "wouter";
 import { useSampleCart } from "@/hooks/useSampleCart";
+import { useRecommendedRestaurants } from "@/hooks/useRecommendedRestaurants";
 import { 
   Header,
   CategoryCard, 
   RestaurantCard, 
   HeroSection, 
   SocialMediaIcon, 
-  FooterSection 
+  FooterSection,
+  SkeletonCard 
 } from "@/components";
 
 export const Home = (): JSX.Element => {
@@ -20,6 +22,7 @@ export const Home = (): JSX.Element => {
   const [location, setLocation] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const { restaurants: recommendedRestaurants, isLoading, error, refetch } = useRecommendedRestaurants();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -76,15 +79,24 @@ export const Home = (): JSX.Element => {
     }
   ];
 
-  // Restaurant data
-  const restaurants = Array.from({ length: isMobile ? 5 : 12 }, (_, index) => ({
-    id: index,
-    name: "Burger King",
-    rating: 4.9,
-    location: "Jakarta Selatan",
-    distance: "2.4 km",
-    image: "/figmaAssets/restaurant-card-bg.png"
-  }));
+  // Get restaurants from API or fallback to mock data
+  const restaurants = recommendedRestaurants.length > 0 
+    ? recommendedRestaurants.slice(0, isMobile ? 5 : 12).map(restaurant => ({
+        id: restaurant.id.toString(),
+        name: restaurant.name,
+        rating: restaurant.star,
+        location: restaurant.place,
+        distance: "2.4 km", // Mock distance - you may want to calculate this based on user location
+        image: restaurant.images[0] || "/figmaAssets/restaurant-card-bg.png"
+      }))
+    : Array.from({ length: isMobile ? 5 : 12 }, (_, index) => ({
+        id: index.toString(),
+        name: "Burger King",
+        rating: 4.9,
+        location: "Jakarta Selatan",
+        distance: "2.4 km",
+        image: "/figmaAssets/restaurant-card-bg.png"
+      }));
 
   // Footer links data
   const exploreLinks = [
@@ -204,49 +216,115 @@ export const Home = (): JSX.Element => {
                   ? 'text-2xl font-extrabold text-[#0a0d12]' 
                   : 'text-2xl font-text-xl-semibold text-[#0a0d12]'
               }`}>
-                Recommended
+                {user ? 'Recommended' : 'Recommended'}
               </h2>
+              {!user && (
+                <p className="text-gray-500 text-sm mt-1">
+                  Discover popular restaurants in your area
+                </p>
+              )}
             </div>
             <div className="flex items-center gap-4">
-              <button className="text-[#c12116] font-extrabold hover:underline" data-testid="button-see-all">
+              <button className="text-[#c12116] font-extrabold hover:underline" data-testid="button-see-all"  onClick={() => setLocation('/categories')}>
                 See All
               </button>
             </div>
           </div>
           
-          <div className={`${
-            isMobile 
-              ? 'space-y-3' 
-              : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
-          }`}>
-            {restaurants.slice(0, isMobile ? 5 : 12).map((restaurant, index) => (
-              <RestaurantCard
-                key={index}
-                name={restaurant.name}
-                rating={restaurant.rating}
-                location={restaurant.location}
-                image={restaurant.image}
-                onClick={() => window.location.href = `/restaurant/${index + 1}`}
-                isMobile={isMobile}
-                variant="compact"
-                data-testid={`card-restaurant-${index}`}
-              />
-            ))}
-          </div>
-          
-          <div className="text-center mt-6">
-            <Button 
-              variant="outline" 
-              className={`${
+          {/* Loading State */}
+          {isLoading && (
+            <div className={`${
+              isMobile 
+                ? 'space-y-3' 
+                : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+            }`}>
+              {Array.from({ length: isMobile ? 5 : 6 }).map((_, index) => (
+                <SkeletonCard 
+                  key={index} 
+                  isMobile={isMobile} 
+                  variant="compact"
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Error State - Only show if there are no restaurants to display */}
+          {error && !isLoading && restaurants.length === 0 && (
+            <div className="text-center py-8">
+              <p className="text-red-500 mb-4">Failed to load recommended restaurants</p>
+              <p className="text-gray-500 mb-4 text-sm">{error}</p>
+              <div className="space-x-3">
+                <Button 
+                  variant="outline" 
+                  onClick={refetch}
+                  className="px-6 py-2"
+                >
+                  Try Again
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Show info message for unauthenticated users when showing fallback data */}
+          {!error && !isLoading && restaurants.length > 0 && !user && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-blue-700 text-sm">
+                    <span className="font-medium">💡 Guest User:</span> You're seeing popular restaurants. Login for personalized recommendations!
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setLocation('/login')}
+                  className="ml-4 bg-white border-blue-300 text-blue-600 hover:bg-blue-50 text-xs px-3 py-1"
+                >
+                  Login
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Restaurant List */}
+          {!isLoading && !error && (
+            <>
+              <div className={`${
                 isMobile 
-                  ? 'w-40 h-10 bg-white text-[#0a0d12] border border-[#d5d7da] hover:bg-gray-50 font-bold text-sm rounded-full' 
-                  : 'bg-white text-[#0a0d12] border-gray-200 hover:bg-gray-50 font-text-md-medium px-8'
-              }`}
-              data-testid="button-show-more"
-            >
-              Show More
-            </Button>
-          </div>
+                  ? 'space-y-3' 
+                  : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+              }`}>
+                {restaurants.map((restaurant, index) => (
+                  <RestaurantCard
+                    key={restaurant.id}
+                    name={restaurant.name}
+                    rating={restaurant.rating}
+                    location={restaurant.location}
+                    image={restaurant.image}
+                    onClick={() => window.location.href = `/restaurant/${restaurant.id}`}
+                    isMobile={isMobile}
+                    variant="compact"
+                    data-testid={`card-restaurant-${index}`}
+                  />
+                ))}
+              </div>
+              
+              <div className="text-center mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setLocation('/categories')}
+                  className={`${
+                    isMobile 
+                      ? 'w-40 h-10 bg-white text-[#0a0d12] border border-[#d5d7da] hover:bg-gray-50 font-bold text-sm rounded-full' 
+                      : 'bg-white text-[#0a0d12] border-gray-200 hover:bg-gray-50 font-text-md-medium px-8'
+                  }`}
+                  data-testid="button-show-more"
+                >
+                  Show More
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
