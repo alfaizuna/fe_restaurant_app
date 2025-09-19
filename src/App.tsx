@@ -14,9 +14,23 @@ import { PaymentSuccess } from "./pages/PaymentSuccess";
 import { Orders } from "./pages/Orders";
 import { Profile } from "./pages/Profile";
 import { useAuthStore } from "@/shared/store";
+import { useAuthInit } from "@/hooks/useAuthInit";
 
 function Router() {
   const { isAuthenticated } = useAuthStore();
+  const { isInitialized, isLoading } = useAuthInit();
+
+  // Show loading screen while initializing auth
+  if (!isInitialized && isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c12116] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
         <Switch>

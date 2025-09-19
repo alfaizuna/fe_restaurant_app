@@ -3,10 +3,19 @@ export interface User {
   email: string
   name: string
   phone?: string
+  phone_number?: string
   avatar?: string
   role?: 'user' | 'admin'
   createdAt?: string
   updatedAt?: string
+}
+
+export interface UpdateProfileData {
+  name?: string
+  email?: string
+  phone_number?: string
+  current_password?: string
+  new_password?: string
 }
 
 export interface LoginCredentials {

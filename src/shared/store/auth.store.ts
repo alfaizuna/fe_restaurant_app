@@ -6,6 +6,15 @@ interface User {
   email: string
   name: string
   phone?: string
+  phone_number?: string
+}
+
+interface UpdateProfileData {
+  name?: string
+  email?: string
+  phone_number?: string
+  current_password?: string
+  new_password?: string
 }
 
 interface AuthState {
@@ -19,6 +28,8 @@ interface AuthState {
 interface AuthActions {
   login: (email: string, password: string) => Promise<void>
   register: (name: string, email: string, phone: string, password: string) => Promise<void>
+  getProfile: () => Promise<void>
+  updateProfile: (data: UpdateProfileData) => Promise<void>
   logout: () => void
   clearError: () => void
   setUser: (user: User | null) => void
@@ -118,6 +129,100 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               isLoading: false 
             })
             throw error
+          }
+        },
+
+        getProfile: async () => {
+          const currentState = get();
+          
+          // Only fetch profile if we have a token
+          if (!currentState.token) {
+            throw new Error('No token available');
+          }
+
+          set({ isLoading: true, error: null });
+          
+          try {
+            const response = await fetch('https://berestaurantappformentee-production-7e24.up.railway.app/api/auth/profile', {
+              method: 'GET',
+              headers: {
+                'accept': 'application/json',
+                'Authorization': `Bearer ${currentState.token}`,
+              },
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(errorData.message || 'Failed to fetch profile');
+            }
+
+            const responseData = await response.json();
+            
+            // Handle the API response structure
+            if (responseData.success && responseData.data) {
+              const user = responseData.data;
+              set({ 
+                user, 
+                isLoading: false,
+                error: null 
+              });
+            } else {
+              throw new Error(responseData.message || 'Failed to fetch profile');
+            }
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to fetch profile',
+              isLoading: false 
+            });
+            throw error;
+          }
+        },
+
+        updateProfile: async (data: UpdateProfileData) => {
+          const currentState = get();
+          
+          // Only update profile if we have a token
+          if (!currentState.token) {
+            throw new Error('No token available');
+          }
+
+          set({ isLoading: true, error: null });
+          
+          try {
+            const response = await fetch('https://berestaurantappformentee-production-7e24.up.railway.app/api/auth/profile', {
+              method: 'PUT',
+              headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentState.token}`,
+              },
+              body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(errorData.message || 'Failed to update profile');
+            }
+
+            const responseData = await response.json();
+            
+            // Handle the API response structure
+            if (responseData.success && responseData.data) {
+              const user = responseData.data;
+              set({ 
+                user, 
+                isLoading: false,
+                error: null 
+              });
+            } else {
+              throw new Error(responseData.message || 'Failed to update profile');
+            }
+          } catch (error) {
+            set({ 
+              error: error instanceof Error ? error.message : 'Failed to update profile',
+              isLoading: false 
+            });
+            throw error;
           }
         },
 

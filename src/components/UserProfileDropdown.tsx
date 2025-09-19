@@ -13,7 +13,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
   isMobile = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuthStore();
+  const { user, logout, getProfile } = useAuthStore();
   const [, setLocation] = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -90,35 +90,27 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
           isMobile ? 'w-[180px]' : 'w-[197px]'
         }`}>
           {/* User Info Section */}
-          <div className="flex items-center gap-3 mb-3">
+          <button className="flex items-center gap-3 mb-3" onClick={() => {
+                setIsOpen(false);
+                setLocation('/profile');
+              }}>
             <img
               src="/figmaAssets/user-avatar.png"
               alt="Profile"
               className="w-9 h-9 rounded-full"
+              
             />
             <span className="font-bold text-[#0a0d12]">
               {user?.name || 'User'}
             </span>
-          </div>
+          </button>
 
           {/* Separator */}
           <hr className="border-[#E9EAEB] mb-3" />
 
           {/* Menu Items */}
           <div className="space-y-3">
-            {/* Profile */}
-            {/* <button 
-              className="flex items-center gap-2 w-full text-left hover:bg-gray-50 p-1 rounded transition-colors"
-              onClick={() => {
-                setIsOpen(false);
-                setLocation('/profile');
-              }}
-            >
-              <img src="/figmaAssets/user-avatar.png" alt="Profile" className="w-5 h-5 rounded-full" />
-              <span className="font-text-sm-medium text-[#0a0d12]">
-                Profile
-              </span>
-            </button> */}
+            
 
             {/* Delivery Address */}
             <button 

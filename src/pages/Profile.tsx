@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { FooterSection } from '@/components/FooterSection';
 import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { Label } from '@/shared/ui/label';
+import { Card, CardContent } from '@/shared/ui/card';
 import { useAuthStore } from '@/shared/store';
 import { useLocation } from 'wouter';
+import { useToast } from '@/hooks/use-toast';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
 interface ProfileSidebarProps {
   userName?: string;
@@ -81,6 +86,301 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   );
 };
 
+interface ProfileFormData {
+  name: string;
+  email: string;
+  phone_number: string;
+  current_password: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+interface UpdateProfileCardProps {
+  isLoading?: boolean;
+  onCancel?: () => void;
+}
+
+const UpdateProfileCard: React.FC<UpdateProfileCardProps> = ({
+  isLoading = false,
+  onCancel
+}) => {
+  const { user, updateProfile, getProfile } = useAuthStore();
+  const { toast } = useToast();
+  
+  const [formData, setFormData] = useState<ProfileFormData>({
+    name: user?.name || '',
+    email: user?.email || '',
+    phone_number: user?.phone_number || '',
+    current_password: '',
+    new_password: '',
+    confirm_password: ''
+  });
+  
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (field: keyof ProfileFormData, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const validateForm = (): boolean => {
+    if (!formData.name.trim()) {
+      toast({
+        title: "Error",
+        description: "Name is required",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    if (!formData.email.trim()) {
+      toast({
+        title: "Error",
+        description: "Email is required",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    if (!formData.phone_number.trim()) {
+      toast({
+        title: "Error",
+        description: "Phone number is required",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    if (formData.new_password && !formData.current_password) {
+      toast({
+        title: "Error",
+        description: "Current password is required to set new password",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    if (formData.new_password && formData.new_password !== formData.confirm_password) {
+      toast({
+        title: "Error",
+        description: "New password and confirm password do not match",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const updateData: any = {
+        name: formData.name,
+        email: formData.email,
+        phone_number: formData.phone_number
+      };
+
+      // Only include password fields if user wants to change password
+      if (formData.new_password) {
+        updateData.current_password = formData.current_password;
+        updateData.new_password = formData.new_password;
+      }
+
+      await updateProfile(updateData);
+      
+      // Refresh profile data
+      await getProfile();
+      
+      toast({
+        title: "Success",
+        description: "Profile updated successfully",
+      });
+      
+      if (onCancel) onCancel();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update profile",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-[524px]">
+      <h1 className="text-[32px] font-extrabold text-[#0A0D12] mb-6 font-nunito">Update Profile</h1>
+      
+      <Card className="rounded-2xl shadow-[0px_0px_20px_0px_rgba(203,202,202,0.25)]">
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name Field */}
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                placeholder="Enter your full name"
+                className="w-full"
+              />
+            </div>
+
+            {/* Email Field */}
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                placeholder="Enter your email"
+                className="w-full"
+              />
+            </div>
+
+            {/* Phone Field */}
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={formData.phone_number}
+                onChange={(e) => handleInputChange('phone_number', e.target.value)}
+                placeholder="Enter your phone number"
+                className="w-full"
+              />
+            </div>
+
+            {/* Password Change Section */}
+            <div className="space-y-4 pt-4 border-t">
+              <h3 className="text-lg font-semibold text-[#0A0D12]">Change Password (Optional)</h3>
+              
+              {/* Current Password */}
+              <div className="space-y-2">
+                <Label htmlFor="current_password">Current Password</Label>
+                <div className="relative">
+                  <Input
+                    id="current_password"
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    value={formData.current_password}
+                    onChange={(e) => handleInputChange('current_password', e.target.value)}
+                    placeholder="Enter current password"
+                    className="w-full pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showCurrentPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* New Password */}
+              <div className="space-y-2">
+                <Label htmlFor="new_password">New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="new_password"
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={formData.new_password}
+                    onChange={(e) => handleInputChange('new_password', e.target.value)}
+                    placeholder="Enter new password"
+                    className="w-full pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm New Password */}
+              <div className="space-y-2">
+                <Label htmlFor="confirm_password">Confirm New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirm_password"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={formData.confirm_password}
+                    onChange={(e) => handleInputChange('confirm_password', e.target.value)}
+                    placeholder="Confirm new password"
+                    className="w-full pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                disabled={isSubmitting}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="flex-1 bg-[#C12116] hover:bg-[#A11015] text-white"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  'Update Profile'
+                )}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
 interface ProfileCardProps {
   userName?: string;
   userEmail?: string;
@@ -124,7 +424,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               
               {/* Phone */}
               <div className="flex justify-between items-center">
-                <span className="text-base font-medium text-[#0A0D12]">Nomor Handphone</span>
+                <span className="text-base font-medium text-[#0A0D12]">Phone Number</span>
                 <span className="text-base font-bold text-[#0A0D12]">{userPhone}</span>
               </div>
             </div>
@@ -144,8 +444,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 };
 
 export const Profile: React.FC = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout, isLoading } = useAuthStore();
   const [, setLocation] = useLocation();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -162,8 +463,11 @@ export const Profile: React.FC = () => {
   };
 
   const handleUpdateProfile = () => {
-    // Navigate to update profile page or open modal
-    console.log('Update profile');
+    setIsEditMode(true);
+  };
+
+  const handleCancelUpdate = () => {
+    setIsEditMode(false);
   };
 
   // Footer data
@@ -203,13 +507,20 @@ export const Profile: React.FC = () => {
             />
 
             {/* Profile Content */}
-            <ProfileCard
-              userName={user?.name || 'Johndoe'}
-              userEmail={user?.email || 'johndoe@email.com'}
-              userPhone="081234567890"
-              userAvatar="/figmaAssets/user-avatar.png"
-              onUpdateProfile={handleUpdateProfile}
-            />
+            {isEditMode ? (
+              <UpdateProfileCard
+                isLoading={isLoading}
+                onCancel={handleCancelUpdate}
+              />
+            ) : (
+              <ProfileCard
+                userName={user?.name || 'Johndoe'}
+                userEmail={user?.email || 'johndoe@email.com'}
+                userPhone={user?.phone_number || '081234567890'}
+                userAvatar="/figmaAssets/user-avatar.png"
+                onUpdateProfile={handleUpdateProfile}
+              />
+            )}
           </div>
         </div>
       </div>
