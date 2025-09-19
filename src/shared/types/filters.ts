@@ -8,7 +8,7 @@ export interface FilterOptions {
 }
 
 export interface FilterState {
-  selectedDistance: string[];
+  range: number;
   priceRange: {
     min: number | null;
     max: number | null;
@@ -17,7 +17,7 @@ export interface FilterState {
 }
 
 export const defaultFilters: FilterState = {
-  selectedDistance: [],
+  range: 0,
   priceRange: {
     min: null,
     max: null,
@@ -27,10 +27,10 @@ export const defaultFilters: FilterState = {
 
 export const filterOptions = {
   distance: [
-    { id: 'nearby', label: 'Nearby', value: 'nearby' },
-    { id: '1km', label: 'Within 1 km', value: '1' },
-    { id: '3km', label: 'Within 3 km', value: '3' },
-    { id: '5km', label: 'Within 5 km', value: '5' },
+    { id: '5', label: 'Within 5 km', value: 5 },
+    { id: '10', label: 'Within 10 km', value: 10 },
+    { id: '15', label: 'Within 15 km', value: 15 },
+    { id: '20', label: 'Within 20 km', value: 20 },
   ],
   ratings: [1, 2, 3, 4, 5],
 };

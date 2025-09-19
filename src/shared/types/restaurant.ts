@@ -1,4 +1,21 @@
 export interface Restaurant {
+  id: number
+  name: string
+  star: number
+  place: string
+  logo: string
+  images: string[]
+  reviewCount: number
+  menuCount: number
+  priceRange: {
+    min: number
+    max: number
+  }
+  distance: number
+}
+
+// Legacy interface for backward compatibility
+export interface RestaurantLegacy {
   id: string
   name: string
   description: string

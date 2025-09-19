@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, Checkbox } from '@/shared/ui';
-import { FilterState, filterOptions } from '@/shared/types';
+import { FilterState, filterOptions, defaultFilters } from '@/shared/types';
 
 interface FilterSidebarProps {
   filters: FilterState;
@@ -11,14 +11,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   filters,
   onFiltersChange,
 }) => {
-  const handleDistanceChange = (value: string, checked: boolean) => {
-    const updatedDistance = checked
-      ? [...filters.selectedDistance, value]
-      : filters.selectedDistance.filter(item => item !== value);
-    
+  const handleRangeChange = (range: number, checked: boolean) => {
     onFiltersChange({
       ...filters,
-      selectedDistance: updatedDistance,
+      range: checked ? range : 0,
     });
   };
 
@@ -47,26 +43,32 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   return (
     <div className="w-[266px] bg-white rounded-xl shadow-lg p-4 space-y-6">
       {/* Filter Title */}
-      <div className="px-2">
-        <h2 className="text-base font-extrabold text-[#0a0d12] text-center">FILTER</h2>
+      <div className="px-2 flex justify-between items-center">
+        <h2 className="text-base font-extrabold text-[#0a0d12]">FILTER</h2>
+        <button
+          onClick={() => onFiltersChange(defaultFilters)}
+          className="text-sm text-[#c12116] hover:text-[#a91e13] font-medium"
+        >
+          Clear All
+        </button>
       </div>
 
-      {/* Distance Filter */}
+      {/* Range Filter */}
       <div className="px-2">
-        <h3 className="text-lg font-extrabold text-[#0a0d12] mb-3">Distance</h3>
+        <h3 className="text-lg font-extrabold text-[#0a0d12] mb-3">Distance Range</h3>
         <div className="space-y-2">
           {filterOptions.distance.map((option) => (
             <div key={option.id} className="flex items-center space-x-2">
               <Checkbox
-                id={`desktop-${option.id}`}
-                checked={filters.selectedDistance.includes(option.value)}
+                id={`desktop-range-${option.id}`}
+                checked={filters.range === option.value}
                 onCheckedChange={(checked: boolean) =>
-                  handleDistanceChange(option.value, checked)
+                  handleRangeChange(option.value, checked)
                 }
                 className="w-5 h-5"
               />
               <label
-                htmlFor={`desktop-${option.id}`}
+                htmlFor={`desktop-range-${option.id}`}
                 className="text-base text-[#0a0d12] leading-7 flex-1"
               >
                 {option.label}
