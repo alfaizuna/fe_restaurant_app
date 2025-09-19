@@ -17,15 +17,6 @@ export const HeroSection = ({ isMobile }: HeroSectionProps) => {
         : 'max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'
     }`}>
       <div className={`${isMobile ? 'w-full' : ''}`}>
-        {isAuthenticated && user && (
-          <p className={`${
-            isMobile 
-              ? 'text-lg font-medium mb-2' 
-              : 'text-xl md:text-2xl font-medium mb-4'
-          } text-white/90`}>
-            Welcome back, {user.name}! 👋
-          </p>
-        )}
         <h1 className={`${
           isMobile 
             ? 'text-4xl font-display-lg-extrabold mb-1' 
